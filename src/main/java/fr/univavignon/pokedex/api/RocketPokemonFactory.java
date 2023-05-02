@@ -8,7 +8,11 @@ import org.apache.commons.collections4.map.UnmodifiableMap;
 
 
 public class RocketPokemonFactory implements IPokemonFactory {
+IPokemonMetadataProvider provider;
 
+public RocketPokemonFactory(IPokemonMetadataProvider provider){
+    this.provider=provider;
+}
     private static final Map<Integer, String> index2name;
     static {
         Map<Integer, String> aMap = new HashMap<Integer, String>();
@@ -32,28 +36,27 @@ public class RocketPokemonFactory implements IPokemonFactory {
 
     @Override
     public Pokemon createPokemon(int index, int cp, int hp, int dust, int candy) {
-        String name;
-        if(!index2name.containsKey(index)) {
-            name = index2name.get(0);
-        } else {
-            name = index2name.get(index);
+        try{
+            PokemonMetadata pokemonMetadata= provider.getPokemonMetadata (index);
+            String name;
+            if(!index2name.containsKey(index)) {
+                name = index2name.get(0);
+            } else {
+                name = index2name.get(index);
+            }
+
+            int attack=pokemonMetadata.getAttack();
+            int defense=pokemonMetadata.getDefense();
+            int stamina=pokemonMetadata.getStamina();
+            double iv=56;
+            return new Pokemon(index, name, attack, defense, stamina, cp, hp, dust, candy, iv);
+
         }
-        int attack;
-        int defense;
-        int stamina;
-        double iv;
-        if(index < 0) {
-            attack = 1000;
-            defense = 1000;
-            stamina = 1000;
-            iv = 0;
-        } else {
-            attack = RocketPokemonFactory.generateRandomStat();
-            defense = RocketPokemonFactory.generateRandomStat();
-            stamina = RocketPokemonFactory.generateRandomStat();
-            iv = 1;
+        catch (PokedexException e){
+            System.out.println(e.getMessage());
         }
-        return new Pokemon(index, name, attack, defense, stamina, cp, hp, dust, candy, iv);
+
+    return  null;
     }
 
 }
