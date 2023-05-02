@@ -8,8 +8,10 @@ package fr.univavignon.pokedex.api;
 public class IPokemonFactoryTest {
 
     @Test
-    public void createPokemonTest() {
-        IPokemonFactory pokemonFactory = new RocketPokemonFactory();
+    public void createPokemonTest() throws PokedexException {
+
+       IPokemonMetadataProvider pokemonMetadataProvider = new PokemonMetadataProvider();
+        IPokemonFactory pokemonFactory = new RocketPokemonFactory(pokemonMetadataProvider);
 
         Pokemon pokemon = pokemonFactory.createPokemon(0, 613, 64, 4000, 4);
         assertEquals(0, pokemon.getIndex());
@@ -17,10 +19,10 @@ public class IPokemonFactoryTest {
         assertEquals(64, pokemon.getHp());
         assertEquals(4000, pokemon.getDust());
         assertEquals(4, pokemon.getCandy());
-        assertEquals("Bulbizarre", pokemon.getName());
-        assertEquals(126, pokemon.getAttack());
-        assertEquals(126, pokemon.getDefense());
-        assertEquals(90, pokemon.getStamina());
+        assertEquals("MISSINGNO", pokemon.getName());
+        assertEquals(pokemonMetadataProvider.getPokemonMetadata(0).getAttack(), pokemon.getAttack());
+        assertEquals(pokemonMetadataProvider.getPokemonMetadata(0).getDefense(), pokemon.getDefense());
+        assertEquals(pokemonMetadataProvider.getPokemonMetadata(0).getStamina(), pokemon.getStamina());
 
     }
 
