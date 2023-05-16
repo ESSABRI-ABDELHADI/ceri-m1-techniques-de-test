@@ -59,13 +59,7 @@
                         <goals>
                             <goal>badges</goal>
                         </goals>
-                        <configuration>
-                            <skip>${badges.skip}</skip>
-                            <outputDir>./</outputDir>
-                            <inputFiles>
-                                <inputFile>target/checkstyle-result.xml</inputFile>
-                            </inputFiles>
-                        </configuration>
+
                     </execution>
                 </executions>
             </plugin>
